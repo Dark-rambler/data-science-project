@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Predicción de Diabetes</title>
+    <style>
+        body { font-family: Arial, sans-serif; background: #f4f4f4; }
+        .container { max-width: 400px; margin: 40px auto; background: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 2px 8px #ccc; }
+        h2 { text-align: center; }
+        label { display: block; margin-top: 10px; }
+        input { width: 100%; padding: 8px; margin-top: 4px; }
+        button { margin-top: 16px; width: 100%; padding: 10px; background: #007bff; color: #fff; border: none; border-radius: 4px; cursor: pointer; }
+        .result { margin-top: 20px; text-align: center; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Predicción de Diabetes</h2>
+        <form id="diabetesForm">
+            <label>Embarazos <input type="number" name="Pregnancies" required></label>
+            <label>Glucosa <input type="number" name="Glucose" required></label>
+            <label>Presión sanguínea <input type="number" name="BloodPressure" required></label>
+            <label>Grosor de piel <input type="number" name="SkinThickness" required></label>
+            <label>Insulina <input type="number" name="Insulin" required></label>
+            <label>IMC <input type="number" step="any" name="BMI" required></label>
+            <label>Antecedentes familiares <input type="number" step="any" name="DiabetesPedigreeFunction" required></label>
+            <label>Edad <input type="number" name="Age" required></label>
+            <button type="submit">Predecir</button>
+        </form>
+        <div class="result" id="result"></div>
+    </div>
+    <script>
+        document.getElementById('diabetesForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const form = e.target;
+            const data = {
+                Pregnancies: parseInt(form.Pregnancies.value),
+                Glucose: parseInt(form.Glucose.value),
+                BloodPressure: parseInt(form.BloodPressure.value),
+                SkinThickness: parseInt(form.SkinThickness.value),
+                Insulin: parseInt(form.Insulin.value),
+                BMI: parseFloat(form.BMI.value),
+                DiabetesPedigreeFunction: parseFloat(form.DiabetesPedigreeFunction.value),
+                Age: parseInt(form.Age.value)
+            };
+            const res = await fetch('http://127.0.0.1:5000/predict', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            });
+            const result = await res.json();
+            document.getElementById('result').innerText =
+                `Probabilidad: ${(result.probability*100).toFixed(2)}%\nPredicción: ${result.prediction === 1 ? 'Diabetes' : 'No diabetes'}`;
+        });
+    </script>
+</body>
+</html>
