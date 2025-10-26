@@ -8,13 +8,22 @@ import pickle
 # Cargar datos
 df = pd.read_csv('data/diabetes_012_health_indicators_BRFSS2015.csv')
 
-# Seleccionar variables relevantes
+# Seleccionar las 21 variables relevantes
 features = [
     'HighBP', 'HighChol', 'CholCheck', 'BMI', 'Smoker',
-    'Stroke', 'HeartDiseaseorAttack', 'PhysActivity', 'Fruits'
+    'Stroke', 'HeartDiseaseorAttack', 'PhysActivity', 'Fruits',
+    'Veggies', 'HvyAlcoholConsump', 'AnyHealthcare', 'NoDocbcCost',
+    'GenHlth', 'MentHlth', 'PhysHlth', 'DiffWalk', 'Sex', 'Age',
+    'Education', 'Income'
 ]
 X = df[features]
 y = df['Diabetes_012']
+
+# Verificar valores faltantes
+print("Valores faltantes en X_train:")
+print(X.isnull().sum())
+print("\nValores faltantes en X_test:")
+print(X.isnull().sum())
 
 # Dividir en entrenamiento y prueba
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
